@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Jeopardy Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFFBF0 0%, #FEF3C7 50%, #FFEDD5 100%);
+            min-height: 100vh;
+        }
+        :root {
+            --card-bg: #FEF08A;
+            --card-text: #1C1917;
+        }
+        .card-custom {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+        }
+    </style>
+</head>
+<body class="text-stone-900 pb-16">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-amber-200/60 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <!-- Salt & Light Logo -->
+                <div class="p-1 bg-amber-100 rounded-2xl border border-amber-300 shadow-sm flex items-center justify-center">
+                    <svg class="w-10 h-10" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 240 160 C 170 200 170 300 240 370 L 240 390 L 340 390 L 340 370 C 410 300 410 200 340 160 C 290 120 270 120 240 160 Z" fill="#FBBF24" opacity="0.85"/>
+                        <circle cx="290" cy="250" r="110" fill="#F59E0B" opacity="0.4"/>
+                        <path d="M 230 160 C 160 210 170 320 230 370 L 235 390 L 345 390 L 350 370 C 410 320 420 210 350 160 C 295 120 270 120 230 160 Z" stroke="#1E293B" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <rect x="230" y="390" width="120" height="30" rx="8" fill="#64748B" stroke="#1E293B" stroke-width="10"/>
+                        <path d="M 245 420 L 335 420 L 325 435 L 255 435 Z" fill="#475569" stroke="#1E293B" stroke-width="8"/>
+                        <circle cx="280" cy="450" r="4" fill="#1E293B"/>
+                        <circle cx="290" cy="465" r="4" fill="#1E293B"/>
+                        <circle cx="300" cy="450" r="4" fill="#1E293B"/>
+                        <circle cx="295" cy="480" r="4" fill="#1E293B"/>
+                        <text x="250" y="270" font-family="'Inter', sans-serif" font-weight="900" font-size="52" fill="#0F172A">SALT</text>
+                        <text x="360" y="295" font-family="'Inter', sans-serif" font-weight="800" font-size="34" fill="#0F172A">&amp;</text>
+                        <text x="250" y="340" font-family="'Inter', sans-serif" font-weight="900" font-size="58" fill="#0F172A">LIGHT</text>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-black text-xl md:text-2xl tracking-tight text-stone-900">YOUTH FELLOWSHIP</h1>
+                    <p class="text-xs text-stone-600 font-extrabold tracking-wider uppercase">FUN, FOOD, FELLOWSHIP</p>
+                </div>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="flex items-center flex-wrap gap-2">
+                <!-- Theme Customizer Dropdown -->
+                <div class="relative">
+                    <button id="themeToggleBtn" onclick="toggleThemePanel()" class="px-3.5 py-2 bg-amber-100/90 hover:bg-amber-200 text-stone-900 font-bold rounded-xl text-sm border border-amber-300/80 flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-palette text-amber-700"></i>
+                        <span>Theme</span>
+                        <i class="fa-solid fa-chevron-down text-xs opacity-60"></i>
+                    </button>
+
+                    <!-- Theme Selector Menu -->
+                    <div id="themeMenu" class="hidden absolute right-0 mt-2 w-72 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-stone-200 p-4 z-50 text-stone-900">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-stone-500 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-swatchbook text-orange-500"></i> Preset Themes
+                        </h3>
+                        <div class="space-y-1.5 mb-4 text-xs font-semibold">
+                            <button onclick="applyPresetTheme('pastel')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-50 border border-transparent hover:border-amber-200 flex items-center justify-between">
+                                <span>🌸 Soft Pastel Cream</span>
+                                <div class="flex gap-1">
+                                    <span class="w-3 h-3 rounded-full bg-[#FFFBF0] border border-stone-300"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#FEF08A]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#FDBA74]"></span>
+                                </div>
+                            </button>
+                            <button onclick="applyPresetTheme('daylight')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-stone-100 border border-transparent hover:border-stone-200 flex items-center justify-between">
+                                <span>☀️ Soft Daylight White</span>
+                                <div class="flex gap-1">
+                                    <span class="w-3 h-3 rounded-full bg-[#FFFFFF] border border-stone-300"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#E2E8F0]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#38BDF8]"></span>
+                                </div>
+                            </button>
+                            <button onclick="applyPresetTheme('retro')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-50 border border-transparent hover:border-amber-200 flex items-center justify-between">
+                                <span>🌅 Warm Retro Sunset</span>
+                                <div class="flex gap-1">
+                                    <span class="w-3 h-3 rounded-full bg-[#FEF3C7]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#FDE68A]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#EA580C]"></span>
+                                </div>
+                            </button>
+                            <button onclick="applyPresetTheme('dark')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-stone-100 border border-transparent hover:border-stone-200 flex items-center justify-between">
+                                <span>🌙 Eye-Comfort Slate</span>
+                                <div class="flex gap-1">
+                                    <span class="w-3 h-3 rounded-full bg-[#0F172A]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#1E293B]"></span>
+                                    <span class="w-3 h-3 rounded-full bg-[#38BDF8]"></span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <hr class="border-stone-200 my-3">
+
+                        <!-- Custom Color Inputs -->
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-stone-500 mb-2">Custom Color Tweaks</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <label class="block text-stone-500 text-[10px] uppercase font-bold mb-1">BG Start</label>
+                                <input type="color" id="colorBgStart" onchange="updateCustomColors()" class="w-full h-8 rounded-lg cursor-pointer border border-stone-300">
+                            </div>
+                            <div>
+                                <label class="block text-stone-500 text-[10px] uppercase font-bold mb-1">BG End</label>
+                                <input type="color" id="colorBgEnd" onchange="updateCustomColors()" class="w-full h-8 rounded-lg cursor-pointer border border-stone-300">
+                            </div>
+                            <div>
+                                <label class="block text-stone-500 text-[10px] uppercase font-bold mb-1">Card Color</label>
+                                <input type="color" id="colorCard" onchange="updateCustomColors()" class="w-full h-8 rounded-lg cursor-pointer border border-stone-300">
+                            </div>
+                            <div>
+                                <label class="block text-stone-500 text-[10px] uppercase font-bold mb-1">Text Color</label>
+                                <input type="color" id="colorText" onchange="updateCustomColors()" class="w-full h-8 rounded-lg cursor-pointer border border-stone-300">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mode Switcher -->
+                <div class="bg-stone-200/80 p-1 rounded-2xl flex items-center gap-1 border border-stone-300/60">
+                    <button id="modePlayBtn" onclick="setMode('play')" class="px-4 py-1.5 rounded-xl text-sm font-bold shadow-sm bg-orange-500 text-white">
+                        <i class="fa-solid fa-gamepad mr-1"></i> Play
+                    </button>
+                    <button id="modeEditBtn" onclick="setMode('edit')" class="px-4 py-1.5 rounded-xl text-sm font-bold text-stone-700 hover:text-stone-900">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 mt-6">
+        
+        <!-- Builder Controls Bar (Shown only in Edit Mode) -->
+        <div id="builderToolbar" class="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-amber-200/70 mb-6 flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Grid Dimension Controls -->
+            <div class="flex items-center flex-wrap gap-4 text-xs font-bold text-stone-800">
+                <div class="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                    <span>Categories (Cols):</span>
+                    <button onclick="changeColumns(-1)" class="w-7 h-7 rounded-lg bg-white border border-amber-300 hover:bg-amber-100 flex items-center justify-center font-black">-</button>
+                    <span id="colCountDisplay" class="font-extrabold text-sm px-1 text-orange-600">5</span>
+                    <button onclick="changeColumns(1)" class="w-7 h-7 rounded-lg bg-white border border-amber-300 hover:bg-amber-100 flex items-center justify-center font-black">+</button>
+                </div>
+
+                <div class="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                    <span>Clue Tiers (Rows):</span>
+                    <button onclick="changeRows(-1)" class="w-7 h-7 rounded-lg bg-white border border-amber-300 hover:bg-amber-100 flex items-center justify-center font-black">-</button>
+                    <span id="rowCountDisplay" class="font-extrabold text-sm px-1 text-orange-600">5</span>
+                    <button onclick="changeRows(1)" class="w-7 h-7 rounded-lg bg-white border border-amber-300 hover:bg-amber-100 flex items-center justify-center font-black">+</button>
+                </div>
+
+                <!-- Currency/Symbol and Point Step Settings -->
+                <div class="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                    <span>Symbol:</span>
+                    <input type="text" id="symbolInput" value="$" onchange="updateSymbol(this.value)" class="w-10 px-1 py-0.5 text-center bg-white border border-amber-300 rounded-lg text-xs font-bold" placeholder="None">
+                </div>
+
+                <div class="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                    <span>Row Step:</span>
+                    <input type="number" id="stepInput" value="200" step="50" onchange="updateRowStep(this.value)" class="w-16 px-1 py-0.5 text-center bg-white border border-amber-300 rounded-lg text-xs font-bold">
+                </div>
+            </div>
+
+            <!-- Export / Import Actions -->
+            <div class="flex items-center gap-2">
+                <button onclick="openResetModal()" class="px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl text-xs border border-stone-300">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset Board
+                </button>
+                <button onclick="exportGameData()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs shadow-sm">
+                    <i class="fa-solid fa-download mr-1"></i> Save/Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Dynamic Game Board Grid -->
+        <div id="boardContainer" class="overflow-x-auto pb-4">
+            <div id="gameBoard" class="grid gap-3 min-w-[700px]">
+                <!-- Rendered dynamically by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Scoreboard Section -->
+        <section class="mt-8 bg-white/80 backdrop-blur-md rounded-2xl p-5 shadow-sm border border-amber-200/70">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-extrabold text-lg text-stone-900 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-amber-500"></i> Team Scoreboard
+                </h2>
+                <button onclick="addTeam()" class="px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-xs shadow-sm flex items-center gap-1">
+                    <i class="fa-solid fa-plus"></i> Add Team
+                </button>
+            </div>
+
+            <div id="teamsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Teams rendered dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Clue Modal -->
+    <div id="clueModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div id="clueModalCard" class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-amber-200 relative transform transition-all duration-300 scale-95 opacity-0">
+            
+            <button onclick="closeClueModal()" class="absolute top-4 right-4 w-9 h-9 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full font-bold flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center pt-2">
+                <span id="modalCategory" class="inline-block px-3 py-1 bg-amber-100 text-amber-900 text-xs font-black rounded-full uppercase tracking-wider mb-2">Category</span>
+                <h3 id="modalValue" class="text-2xl font-black text-orange-600 mb-4">$200</h3>
+
+                <!-- Clue Text Container -->
+                <div class="min-h-[140px] flex items-center justify-center bg-amber-50/50 rounded-2xl p-6 border border-amber-100 mb-6">
+                    <p id="modalClueText" class="text-xl md:text-2xl font-bold text-stone-800 leading-relaxed"></p>
+                </div>
+
+                <!-- Answer Section -->
+                <div id="answerSection" class="hidden mb-6 p-4 bg-orange-50 border border-orange-200 rounded-2xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-orange-600 block mb-1">Correct Response</span>
+                    <p id="modalAnswerText" class="text-lg font-extrabold text-stone-900 mb-3"></p>
+
+                    <!-- In-Modal Quick Team Scoring -->
+                    <div class="pt-3 border-t border-orange-200/60">
+                        <span class="text-[10px] font-bold uppercase text-stone-500 block mb-2">Quick Team Score Adjustments</span>
+                        <div id="modalTeamScorer" class="flex flex-wrap items-center justify-center gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="flex items-center justify-center gap-3">
+                    <button id="revealAnswerBtn" onclick="toggleAnswer()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm shadow-sm">
+                        <i class="fa-solid fa-eye mr-1"></i> Reveal Response
+                    </button>
+                    <button onclick="markCardPlayed()" class="px-5 py-2.5 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-xl text-sm shadow-sm">
+                        <i class="fa-solid fa-check mr-1"></i> Close & Mark Played
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Cell Modal -->
+    <div id="editModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-stone-200">
+            <h3 id="editModalTitle" class="font-extrabold text-lg text-stone-900 mb-4">Edit Card</h3>
+            
+            <div id="editCategoryFields" class="hidden mb-4">
+                <label class="block text-xs font-bold text-stone-600 uppercase mb-1">Category Title</label>
+                <input type="text" id="editCategoryInput" class="w-full px-3 py-2 border border-stone-300 rounded-xl font-bold text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none">
+            </div>
+
+            <div id="editClueFields" class="hidden space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 uppercase mb-1">Clue / Question</label>
+                    <textarea id="editClueInput" rows="3" class="w-full px-3 py-2 border border-stone-300 rounded-xl font-medium text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 uppercase mb-1">Response / Answer</label>
+                    <input type="text" id="editAnswerInput" class="w-full px-3 py-2 border border-stone-300 rounded-xl font-bold text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 uppercase mb-1">Point Value</label>
+                    <input type="number" id="editValueInput" class="w-full px-3 py-2 border border-stone-300 rounded-xl font-bold text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="closeEditModal()" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl text-xs">Cancel</button>
+                <button onclick="saveCellEdit()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-xs">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Options Modal -->
+    <div id="resetModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 text-center">
+            <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
+                <i class="fa-solid fa-rotate-left"></i>
+            </div>
+            <h3 class="font-extrabold text-xl text-stone-900 mb-2">Reset Options</h3>
+            <p class="text-stone-600 text-xs mb-6">Choose how you would like to reset the game board:</p>
+
+            <div class="space-y-3 mb-6">
+                <button onclick="resetGameKeepQuestions()" class="w-full p-3.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-2xl text-left transition-colors flex items-center gap-3">
+                    <div class="w-9 h-9 bg-amber-500 text-white rounded-xl flex items-center justify-center shrink-0 font-bold">
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+                    <div>
+                        <div class="font-extrabold text-stone-900 text-sm">Start New Game</div>
+                        <div class="text-[11px] text-stone-500">Unmark all cards & zero scores, keeping all questions intact.</div>
+                    </div>
+                </button>
+
+                <button onclick="resetGameCleanSlate()" class="w-full p-3.5 bg-red-50 hover:bg-red-100 border border-red-200 rounded-2xl text-left transition-colors flex items-center gap-3">
+                    <div class="w-9 h-9 bg-red-500 text-white rounded-xl flex items-center justify-center shrink-0 font-bold">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </div>
+                    <div>
+                        <div class="font-extrabold text-red-900 text-sm">Clear Everything</div>
+                        <div class="text-[11px] text-red-600">Wipe all categories and questions back to blank placeholders.</div>
+                    </div>
+                </button>
+            </div>
+
+            <button onclick="closeResetModal()" class="px-5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl text-xs w-full">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Core App State
+        let gameState = {
+            mode: 'play', // 'play' or 'edit'
+            symbol: ' pts',
+            symbolPosition: 'after', // Position 'after' places symbol after the number (e.g., 100 pts)
+            rowStep: 100,
+            categories: [
+                'BOOK AND BIBLE CHARACTERS',
+                'HOLY MATRIMONY',
+                'GEOGRAPHY IN THE BIBLE',
+                'VERSES AND TEACHINGS',
+                'YOUTH FELLOWSHIP',
+                'REVELATION'
+            ],
+            grid: [
+                // Row 1 (100 pts)
+                [
+                    { value: 100, clue: "What is the very first book of the Bible?", answer: "Genesis", played: false },
+                    { value: 100, clue: "In 2 Corinthians 6, Paul issues a vital warning often applied to dating and marriage, instructing believers not to be \"unequally\" tied together using what agricultural term? cf. 2 Cor 6:14\n\na. bound\nb. yoked\nc. grafted\nd. harvested", answer: "b. yoked", played: false },
+                    { value: 100, clue: "Saul was struck blind by a light from heaven while on the road leading to this ancient Syrian city. cf. Acts 9:3-8\n\na. Antioch\nb. Damascus\nc. Tyre\nd. Sidon", answer: "b. Damascus", played: false },
+                    { value: 100, clue: "Fill in the blank: “The Lord is my ____” (Psalm 23:1)", answer: "Shepherd", played: false },
+                    { value: 100, clue: "What was the first I Am statements of Christ that Ptr Ence taught in his series? cf. John 6:35, 41, 48, 51\n\na. Light of the World\nb. Good Shepherd\nc. Bread of Life\nd. True Vine", answer: "c. Bread of Life", played: false },
+                    { value: 100, clue: "Revelation 19 describes the second coming of Christ. What is the title written on His robe and on His thigh? cf. Rev. 19:16\n\na. Holy, Holy is the Lord God Almighty\nb. King of Kings and Lord of Lords\nc. Alpha and Omega, the First and the Last\nd. Salvation and Glory and Power Belong to Our God", answer: "b. King of Kings and Lord of Lords", played: false }
+                ],
+                // Row 2 (200 pts)
+                [
+                    { value: 200, clue: "How many chapters does the book of Psalms have?\n\na. 151 chapters\nb. 149 chapters\nc. 150 chapters\nd. 152 chapters", answer: "c. 150 chapters", played: false },
+                    { value: 200, clue: "King Solomon famously sealed political alliances through marriage, accumulating what total number of wives and concubines combined? cf. 1 Kings 11:3\n\na. 300\nb. 700\nc. 500\nd. 1000", answer: "d. 1000", played: false },
+                    { value: 200, clue: "Elijah challenged the 450 prophets of Baal to a divine contest where God answered by fire on the top of this mountain ridge. cf. 1 Kings 18:19-24\n\na. Mt. Sinai\nb. Mt. Zion\nc. Mt. Carmel\nd. Mt. Hermon", answer: "c. Mt. Carmel", played: false },
+                    { value: 200, clue: "What is the shortest verse in the Bible?\n\na. John 11:35\nb. John 10:35\nc. John 9:10\nd. John 20:1", answer: "a. John 11:35", played: false },
+                    { value: 200, clue: "What was the latest topic in LIT?\n\na. The Cross Changes Everything\nb. Understanding Grace\nc. The Gospel Defined\nd. Rooted and Driven by the Word", answer: "b. Understanding Grace", played: false },
+                    { value: 200, clue: "The church in Thyatira is rebuked in Revelation 2 for tolerating a woman who calls herself a prophetess and leads believers astray. Who is she named after? cf. Rev. 2:10\n\na. Delilah\nb. Jezebel\nc. Athaliah\nd. Herodias", answer: "b. Jezebel", played: false }
+                ],
+                // Row 3 (300 pts)
+                [
+                    { value: 300, clue: "Who was the prophet that was taken to heaven in a whirlwind by a fiery chariot and horses of fire? cf. 2 Kings 2:11\n\na. Elijah\nb. Hosea\nc. Nahum\nd. Jonah", answer: "a. Elijah", played: false },
+                    { value: 300, clue: "Which Old Testament prophet was commanded by God to marry an unfaithful woman named Gomer as an illustration of Israel's spiritual adultery?\n\na. Hosea\nb. Amos\nc. Micah\nd. Joel", answer: "a. Hosea", played: false },
+                    { value: 300, clue: "While en route to Rome for trial, the Apostle Paul was shipwrecked on this Mediterranean island, where he was bitten by a viper but unharmed. cf. Acts 28:1\n\na. Crete\nb. Cyprus\nc. Patmos\nd. Malta (Melita)", answer: "d. Malta (Melita)", played: false },
+                    { value: 300, clue: "Where does “Honor your father and mother” fall among the 10 commandments?\n\na. first\nb. fifth\nc. third\nd. sixth", answer: "b. fifth", played: false },
+                    { value: 300, clue: "What was the latest topic in YWOW?\n\na. Is this Verse in your Bible?\nb. Portrait of Woman Blessed by God\nc. Knowing God as Father", answer: "a. Is this Verse in your Bible?", played: false },
+                    { value: 300, clue: "Isaiah and Revelation describe this heavenly, six-winged fiery group of angels surrounding God's throne. cf. Isa. 6:2-3 and Rev. 4:8\n\na. Cherubim\nb. Archangels\nc. Seraphim\nd. Dominions", answer: "c. Seraphim", played: false }
+                ],
+                // Row 4 (400 pts)
+                [
+                    { value: 400, clue: "Which Gospel writer was a physician and also wrote the book of Acts?\n\na. Mark\nb. Luke\nc. John\nd. Matthew", answer: "b. Luke", played: false },
+                    { value: 400, clue: "Abraham sent his senior servant back to his homeland to find a god-fearing wife for Isaac. Which woman did he return with? cf. Gen. 24:66-67\n\na. Rachel\nb. Rebekah\nc. Leah\nd. Keturah", answer: "b. Rebekah", played: false },
+                    { value: 400, clue: "Before he died, Moses was granted a view of the entire Promised Land from the top of Mount Nebo, located within this ancient kingdom east of the Jordan River. cf. Deu. 34:1-5\n\na. Edom\nb. Moab\nc. Ammon\nd. Gilead", answer: "b. Moab", played: false },
+                    { value: 400, clue: "What passage did God reveal Himself as the “I AM” stated in the Old Testament when Moses spoke to the Lord at Mt. Sinai?\n\na. Exodus 1:3\nb. Exodus 3:14\nc. John 6:35\nd. John 8:12", answer: "b. Exodus 3:14", played: false },
+                    { value: 400, clue: "What is the full name of our Youth and Associate Pastor?", answer: "Florencio Ragos", played: false },
+                    { value: 400, clue: "In Revelation 8, when the third angel sounded his trumpet, a great bitter star fell from heaven upon a third of the rivers. What was the name of this star? cf. Rev. 8:10-11\n\na. Lucifer\nb. Orion\nc. Wormwood\nd. Arcturus", answer: "c. Wormwood", played: false }
+                ],
+                // Row 5 (500 pts)
+                [
+                    { value: 500, clue: "What was the name of the servant whose ear Peter cut off? cf. John 18:10\n\na. Malchus\nb. Caiaphas\nc. Annas\nd. Guard", answer: "a. Malchus", played: false },
+                    { value: 500, clue: "In Proverbs 31, the acrostic poem describing the 'Virtuous Woman' (or Wife of Noble Character) notes that her worth is far above what precious item? cf. Proverbs 31:10\n\na. fine gold\nb. silver\nc. rubies (jewels)\nd. diamonds", answer: "c. rubies (jewels)", played: false },
+                    { value: 500, clue: "The Apostle John received and recorded the visions of the Book of Revelation while exiled on this small Greek island in the Aegean Sea. cf. Rev. 1:9\n\na. Patmos\nb. Rhodes\nc. Samos\nd. Corfu", answer: "a. Patmos", played: false },
+                    { value: 500, clue: "What Greek word did Jesus speak from the Cross, meaning “it is finished”?\n\na. Adonai\nb. Tetelestai\nc. Kurios\nd. Theos", answer: "b. Tetelestai", played: false },
+                    { value: 500, clue: "What is the official slogan of Youth Fellowship?", answer: "Fun, Food, Fellowship", played: false },
+                    { value: 500, clue: "In Revelation 9, this Hebrew name meaning 'Destruction' or 'The Destroyer' refers to the angel of the bottomless pit. cf. Rev 9:11\n\na. Beelzebub\nb. Abaddon\nc. Legion\nd. Wormwood", answer: "b. Abaddon", played: false }
+                ]
+            ],
+            teams: [
+                { id: 1, name: 'Team 1', score: 0 },
+                { id: 2, name: 'Team 2', score: 0 }
+            ]
+        };
+
+        // Helper function to format points values with symbol placed after the number
+        function formatPointValue(value) {
+            const sym = gameState.symbol || '';
+            if (gameState.symbolPosition === 'after') {
+                return `${value}${sym}`;
+            }
+            return `${sym}${value}`;
+        }
+
+        let activeClueCoords = null; // { row, col }
+        let editingTarget = null; // { type: 'category'|'clue', row, col }
+
+        const THEMES = {
+            pastel: {
+                bgGradient: 'linear-gradient(135deg, #FFFBF0 0%, #FEF3C7 50%, #FFEDD5 100%)',
+                cardBg: '#FEF08A',
+                cardText: '#1C1917',
+                bgStart: '#FFFBF0',
+                bgEnd: '#FFEDD5'
+            },
+            daylight: {
+                bgGradient: 'linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 50%, #E2E8F0 100%)',
+                cardBg: '#F8FAFC',
+                cardText: '#0F172A',
+                bgStart: '#FFFFFF',
+                bgEnd: '#E2E8F0'
+            },
+            retro: {
+                bgGradient: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #FDBA74 100%)',
+                cardBg: '#FEF08A',
+                cardText: '#1C1917',
+                bgStart: '#FEF3C7',
+                bgEnd: '#FDBA74'
+            },
+            dark: {
+                bgGradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)',
+                cardBg: '#1E293B',
+                cardText: '#F8FAFC',
+                bgStart: '#0F172A',
+                bgEnd: '#334155'
+            }
+        };
+
+        // Initialize Default Board Grid
+        function initDefaultGrid(rows = 5, cols = 5) {
+            const grid = [];
+            for (let r = 0; r < rows; r++) {
+                const row = [];
+                const value = (r + 1) * gameState.rowStep;
+                for (let c = 0; c < cols; c++) {
+                    row.push({
+                        value: value,
+                        clue: `Sample clue for Category ${c + 1} at level ${r + 1}.`,
+                        answer: `Sample answer ${r + 1}`,
+                        played: false
+                    });
+                }
+                grid.push(row);
+            }
+            return grid;
+        }
+
+        // Window Load Initialization
+        window.onload = function() {
+            // Updated storage key to force re-initialization with the embedded questions
+            const savedData = localStorage.getItem('jeopardy_studio_state_v3');
+            if (savedData) {
+                try {
+                    gameState = JSON.parse(savedData);
+                } catch(e) {
+                    saveState();
+                }
+            } else {
+                saveState();
+            }
+
+            document.getElementById('symbolInput').value = gameState.symbol || '';
+            document.getElementById('stepInput').value = gameState.rowStep || 100;
+
+            renderBoard();
+            renderTeams();
+        };
+
+        function saveState() {
+            localStorage.setItem('jeopardy_studio_state_v3', JSON.stringify(gameState));
+        }
+
+        // Mode Toggling
+        function setMode(mode) {
+            gameState.mode = mode;
+            const playBtn = document.getElementById('modePlayBtn');
+            const editBtn = document.getElementById('modeEditBtn');
+            const toolbar = document.getElementById('builderToolbar');
+
+            if (mode === 'play') {
+                playBtn.className = "px-4 py-1.5 rounded-xl text-sm font-bold shadow-sm bg-orange-500 text-white";
+                editBtn.className = "px-4 py-1.5 rounded-xl text-sm font-bold text-stone-700 hover:text-stone-900";
+                toolbar.classList.add('hidden');
+            } else {
+                editBtn.className = "px-4 py-1.5 rounded-xl text-sm font-bold shadow-sm bg-orange-500 text-white";
+                playBtn.className = "px-4 py-1.5 rounded-xl text-sm font-bold text-stone-700 hover:text-stone-900";
+                toolbar.classList.remove('hidden');
+            }
+            renderBoard();
+        }
+
+        // Handle Card Click (Play vs Edit Mode)
+        function handleCardClick(row, col) {
+            if (gameState.mode === 'edit') {
+                openEditClueModal(row, col);
+            } else {
+                openClueModal(row, col);
+            }
+        }
+
+        // Board Rendering
+        function renderBoard() {
+            const container = document.getElementById('gameBoard');
+            const cols = gameState.categories.length;
+            const rows = gameState.grid.length;
+
+            document.getElementById('colCountDisplay').innerText = cols;
+            document.getElementById('rowCountDisplay').innerText = rows;
+
+            container.style.gridTemplateColumns = `repeat(${cols}, minmax(130px, 1fr))`;
+            container.innerHTML = '';
+
+            // Render Header Category Row
+            gameState.categories.forEach((cat, colIndex) => {
+                const catCard = document.createElement('div');
+                catCard.className = `p-4 text-center font-black text-sm uppercase tracking-wider rounded-2xl border border-amber-300 shadow-sm bg-amber-200/80 text-amber-950 flex items-center justify-center min-h-[70px] ${gameState.mode === 'edit' ? 'cursor-pointer hover:bg-amber-300' : ''}`;
+                catCard.innerText = cat;
+                if (gameState.mode === 'edit') {
+                    catCard.onclick = () => openEditCategoryModal(colIndex);
+                }
+                container.appendChild(catCard);
+            });
+
+            // Render Clue Grid Cells
+            for (let r = 0; r < rows; r++) {
+                if (!gameState.grid[r]) gameState.grid[r] = [];
+                for (let c = 0; c < cols; c++) {
+                    // Fallback safeguard if a cell is missing in local state
+                    if (!gameState.grid[r][c]) {
+                        gameState.grid[r][c] = {
+                            value: (r + 1) * (gameState.rowStep || 100),
+                            clue: `Clue for ${gameState.categories[c] || 'Category'} (${(r + 1) * 100} pts)`,
+                            answer: 'Answer',
+                            played: false
+                        };
+                    }
+
+                    const cell = gameState.grid[r][c];
+                    const card = document.createElement('button');
+                    
+                    const formattedValue = formatPointValue(cell.value);
+
+                    if (cell.played && gameState.mode === 'play') {
+                        card.className = "p-4 rounded-2xl border border-stone-200 bg-stone-100/50 text-stone-400 font-extrabold text-xl min-h-[90px] flex items-center justify-center cursor-not-allowed opacity-50";
+                        card.innerText = formattedValue;
+                        card.disabled = true;
+                    } else {
+                        card.className = "card-custom p-4 rounded-2xl border border-amber-300 shadow-sm font-black text-2xl min-h-[90px] flex items-center justify-center cursor-pointer";
+                        card.innerText = formattedValue;
+                        card.onclick = () => handleCardClick(r, c);
+                    }
+                    container.appendChild(card);
+                }
+            }
+        }
+
+        // Modals Logic
+        function openClueModal(row, col) {
+            activeClueCoords = { row, col };
+            const cell = gameState.grid[row][col];
+
+            document.getElementById('modalCategory').innerText = gameState.categories[col];
+            document.getElementById('modalValue').innerText = formatPointValue(cell.value);
+            document.getElementById('modalClueText').innerText = cell.clue;
+            document.getElementById('modalAnswerText').innerText = cell.answer;
+            
+            document.getElementById('answerSection').classList.add('hidden');
+            document.getElementById('revealAnswerBtn').classList.remove('hidden');
+
+            const modal = document.getElementById('clueModal');
+            const modalCard = document.getElementById('clueModalCard');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                if (modalCard) {
+                    modalCard.classList.remove('scale-95', 'opacity-0');
+                    modalCard.classList.add('scale-100', 'opacity-100');
+                }
+            }, 10);
+        }
+
+        function toggleAnswer() {
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('revealAnswerBtn').classList.add('hidden');
+            renderModalScorer();
+        }
+
+        function renderModalScorer() {
+            if (!activeClueCoords) return;
+            const cellValue = gameState.grid[activeClueCoords.row][activeClueCoords.col].value;
+            const container = document.getElementById('modalTeamScorer');
+            container.innerHTML = '';
+
+            gameState.teams.forEach(team => {
+                const btnGroup = document.createElement('div');
+                btnGroup.className = "flex items-center bg-white border border-orange-200 rounded-xl overflow-hidden shadow-sm text-xs font-extrabold";
+                btnGroup.innerHTML = `
+                    <span class="px-2.5 py-1 text-stone-700 border-r border-orange-100 bg-orange-50/50">${team.name}</span>
+                    <button onclick="adjustScoreModal(${team.id}, -${cellValue})" class="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 transition-colors" title="Deduct ${cellValue}">-${cellValue}</button>
+                    <button onclick="adjustScoreModal(${team.id}, ${cellValue})" class="px-2 py-1 bg-green-50 hover:bg-green-100 text-green-600 border-l border-orange-100 transition-colors" title="Award ${cellValue}">+${cellValue}</button>
+                `;
+                container.appendChild(btnGroup);
+            });
+        }
+
+        function adjustScoreModal(teamId, delta) {
+            adjustScore(teamId, delta);
+            // Re-render score buttons in case team names/scores change
+            renderModalScorer();
+        }
+
+        function markCardPlayed() {
+            if (activeClueCoords) {
+                gameState.grid[activeClueCoords.row][activeClueCoords.col].played = true;
+                saveState();
+                renderBoard();
+            }
+            closeClueModal();
+        }
+
+        function closeClueModal() {
+            const modalCard = document.getElementById('clueModalCard');
+            if (modalCard) {
+                modalCard.classList.remove('scale-100', 'opacity-100');
+                modalCard.classList.add('scale-95', 'opacity-0');
+            }
+            setTimeout(() => {
+                document.getElementById('clueModal').classList.add('hidden');
+                document.getElementById('clueModal').classList.remove('flex');
+                activeClueCoords = null;
+            }, 200);
+        }
+
+        // Inline Editing Logic
+        function openEditCategoryModal(colIndex) {
+            editingTarget = { type: 'category', col: colIndex };
+            document.getElementById('editModalTitle').innerText = 'Edit Category Name';
+            document.getElementById('editCategoryFields').classList.remove('hidden');
+            document.getElementById('editClueFields').classList.add('hidden');
+            document.getElementById('editCategoryInput').value = gameState.categories[colIndex];
+            
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+        }
+
+        function openEditClueModal(row, col) {
+            editingTarget = { type: 'clue', row, col };
+            const cell = gameState.grid[row][col];
+
+            document.getElementById('editModalTitle').innerText = `Edit Clue (${gameState.categories[col]} - ${gameState.symbol}${cell.value})`;
+            document.getElementById('editCategoryFields').classList.add('hidden');
+            document.getElementById('editClueFields').classList.remove('hidden');
+            
+            document.getElementById('editClueInput').value = cell.clue;
+            document.getElementById('editAnswerInput').value = cell.answer;
+            document.getElementById('editValueInput').value = cell.value;
+
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+        }
+
+        function saveCellEdit() {
+            if (!editingTarget) return;
+
+            if (editingTarget.type === 'category') {
+                const val = document.getElementById('editCategoryInput').value.trim();
+                if (val) gameState.categories[editingTarget.col] = val;
+            } else if (editingTarget.type === 'clue') {
+                const cell = gameState.grid[editingTarget.row][editingTarget.col];
+                cell.clue = document.getElementById('editClueInput').value.trim();
+                cell.answer = document.getElementById('editAnswerInput').value.trim();
+                cell.value = parseInt(document.getElementById('editValueInput').value) || cell.value;
+            }
+
+            saveState();
+            renderBoard();
+            closeEditModal();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editModal').classList.remove('flex');
+            editingTarget = null;
+        }
+
+        // Dynamic Dimension Changes
+        function changeColumns(delta) {
+            const currentCols = gameState.categories.length;
+            const newCols = currentCols + delta;
+            if (newCols < 1 || newCols > 8) return;
+
+            if (delta > 0) {
+                gameState.categories.push(`CATEGORY ${newCols}`);
+                gameState.grid.forEach((row, rIdx) => {
+                    row.push({
+                        value: (rIdx + 1) * gameState.rowStep,
+                        clue: `New clue for Category ${newCols}`,
+                        answer: 'New response',
+                        played: false
+                    });
+                });
+            } else {
+                gameState.categories.pop();
+                gameState.grid.forEach(row => row.pop());
+            }
+            saveState();
+            renderBoard();
+        }
+
+        function changeRows(delta) {
+            const currentRows = gameState.grid.length;
+            const newRows = currentRows + delta;
+            if (newRows < 1 || newRows > 10) return;
+
+            if (delta > 0) {
+                const newRow = [];
+                const value = newRows * gameState.rowStep;
+                for (let c = 0; c < gameState.categories.length; c++) {
+                    newRow.push({
+                        value: value,
+                        clue: `Clue for Tier ${newRows}`,
+                        answer: `Response ${newRows}`,
+                        played: false
+                    });
+                }
+                gameState.grid.push(newRow);
+            } else {
+                gameState.grid.pop();
+            }
+            saveState();
+            renderBoard();
+        }
+
+        function updateSymbol(val) {
+            gameState.symbol = val;
+            saveState();
+            renderBoard();
+        }
+
+        function updateRowStep(val) {
+            const step = parseInt(val) || 200;
+            gameState.rowStep = step;
+            
+            // Recalculate row default values
+            gameState.grid.forEach((row, rIdx) => {
+                row.forEach(cell => {
+                    cell.value = (rIdx + 1) * step;
+                });
+            });
+
+            saveState();
+            renderBoard();
+        }
+
+        // Scoreboard Controls
+        function renderTeams() {
+            const container = document.getElementById('teamsContainer');
+            container.innerHTML = '';
+
+            gameState.teams.forEach(team => {
+                const card = document.createElement('div');
+                card.className = "p-4 bg-amber-50/80 rounded-2xl border border-amber-200 shadow-sm flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <input type="text" value="${team.name}" onchange="updateTeamName(${team.id}, this.value)" class="font-extrabold text-stone-900 bg-transparent border-b border-transparent hover:border-amber-400 focus:border-orange-500 focus:bg-white px-1 text-base w-full focus:outline-none rounded">
+                        <button onclick="removeTeam(${team.id})" class="text-stone-400 hover:text-red-500 transition-colors p-1 text-xs">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="text-2xl font-black text-orange-600 mb-3">${formatPointValue(team.score)}</div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <button onclick="adjustScore(${team.id}, -100)" class="py-1 bg-white hover:bg-amber-100 border border-amber-200 rounded-lg text-xs font-bold text-stone-700">-100</button>
+                        <button onclick="adjustScore(${team.id}, 100)" class="py-1 bg-white hover:bg-amber-100 border border-amber-200 rounded-lg text-xs font-bold text-stone-700">+100</button>
+                        <button onclick="adjustScore(${team.id}, -200)" class="py-1 bg-white hover:bg-amber-100 border border-amber-200 rounded-lg text-xs font-bold text-stone-700">-200</button>
+                        <button onclick="adjustScore(${team.id}, 200)" class="py-1 bg-white hover:bg-amber-100 border border-amber-200 rounded-lg text-xs font-bold text-stone-700">+200</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addTeam() {
+            const newId = Date.now();
+            gameState.teams.push({
+                id: newId,
+                name: `Team ${gameState.teams.length + 1}`,
+                score: 0
+            });
+            saveState();
+            renderTeams();
+        }
+
+        function removeTeam(id) {
+            gameState.teams = gameState.teams.filter(t => t.id !== id);
+            saveState();
+            renderTeams();
+        }
+
+        function updateTeamName(id, name) {
+            const team = gameState.teams.find(t => t.id === id);
+            if (team) team.name = name.trim() || 'Team';
+            saveState();
+        }
+
+        function adjustScore(id, delta) {
+            const team = gameState.teams.find(t => t.id === id);
+            if (team) {
+                team.score += delta;
+                saveState();
+                renderTeams();
+            }
+        }
+
+        // Theme Panel & Custom Colors
+        function toggleThemePanel() {
+            document.getElementById('themeMenu').classList.toggle('hidden');
+        }
+
+        function applyPresetTheme(key) {
+            const theme = THEMES[key];
+            if (!theme) return;
+
+            document.body.style.background = theme.bgGradient;
+            document.documentElement.style.setProperty('--card-bg', theme.cardBg);
+            document.documentElement.style.setProperty('--card-text', theme.cardText);
+
+            document.getElementById('colorBgStart').value = theme.bgStart;
+            document.getElementById('colorBgEnd').value = theme.bgEnd;
+            document.getElementById('colorCard').value = theme.cardBg;
+            document.getElementById('colorText').value = theme.cardText;
+
+            renderBoard();
+        }
+
+        function updateCustomColors() {
+            const start = document.getElementById('colorBgStart').value;
+            const end = document.getElementById('colorBgEnd').value;
+            const cardBg = document.getElementById('colorCard').value;
+            const cardText = document.getElementById('colorText').value;
+
+            document.body.style.background = `linear-gradient(135deg, ${start} 0%, ${end} 100%)`;
+            document.documentElement.style.setProperty('--card-bg', cardBg);
+            document.documentElement.style.setProperty('--card-text', cardText);
+
+            renderBoard();
+        }
+
+        // Reset Options Modal Logic
+        function openResetModal() {
+            const modal = document.getElementById('resetModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeResetModal() {
+            const modal = document.getElementById('resetModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Option 1: Start New Game (keeps questions & categories)
+        function resetGameKeepQuestions() {
+            // Unmark played cards
+            gameState.grid.forEach(row => {
+                row.forEach(cell => {
+                    cell.played = false;
+                });
+            });
+            // Reset team scores
+            gameState.teams.forEach(t => t.score = 0);
+
+            saveState();
+            renderBoard();
+            renderTeams();
+            closeResetModal();
+        }
+
+        // Option 2: Clean Slate (clears everything to default placeholders)
+        function resetGameCleanSlate() {
+            gameState.categories = ['CATEGORY 1', 'CATEGORY 2', 'CATEGORY 3', 'CATEGORY 4', 'CATEGORY 5'];
+            gameState.grid = initDefaultGrid(5, 5);
+            gameState.teams.forEach(t => t.score = 0);
+
+            saveState();
+            renderBoard();
+            renderTeams();
+            closeResetModal();
+        }
+
+        function exportGameData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameState, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "jeopardy_game.json");
+            dlAnchorElem.click();
+        }
+    </script>
+</body>
+</html>
